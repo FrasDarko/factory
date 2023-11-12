@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {
-    const RESULTS_PRE_PAGE = 5;
+    const RESULTS_PER_PAGE = 5;
 
     private static $standardSelect = 'products.id, products.sku, products.name, products.description, products.published, products.price, contract_lists.price as contractPrice, listPrice, group_concat(categories.id) as categories';
 
@@ -31,7 +31,7 @@ class ProductsController extends Controller
     public function index($userId, $page = 1) {
         $products = self::mainQuery($userId)
                     ->select(DB::raw(self::$standardSelect))
-                    ->skip(($page - 1) * self::RESULTS_PRE_PAGE)->take(self::RESULTS_PRE_PAGE)
+                    ->skip(($page - 1) * self::RESULTS_PER_PAGE)->take(self::RESULTS_PER_PAGE)
                     ->get();
 
         if (!empty($products) && count($products) > 0) {
@@ -54,14 +54,14 @@ class ProductsController extends Controller
             return response()->json($product);
         } else {
             return response()->json(["message" => "not found"], 404);
-        }
+        }RESULTS_PER_PAGE
     }
 
     public function showByCategory($userId, $catId, $page = 1) {
         $products = self::mainQuery($userId)
                     ->select(DB::raw(self::$standardSelect))
                     ->where('categories.id', '=', $catId)
-                    ->skip(($page - 1) * self::RESULTS_PRE_PAGE)->take(self::RESULTS_PRE_PAGE)
+                    ->skip(($page - 1) * self::RESULTS_PER_PAGE)->take(self::RESULTS_PER_PAGE)
                     ->get();
 
         if (!empty($products) && count($products) > 0) {
